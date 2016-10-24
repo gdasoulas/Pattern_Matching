@@ -102,9 +102,10 @@ end
 
 fprintf('--------------------------------\n 11th question ...\n Bayesian Classifier\n');
 
-s_all = s_all + (1/(2*pi)); % biased 
+%s_all_biased = s_all + (1/(4*pi+3)); % biased with 1/2π
+s_all_biased = s_all + (1/(4*pi+3)); % biased with 1/(4π+3) for better estimation 
 
-Px_depC = dependent_prob(TestData,m_all,s_all);
+Px_depC = dependent_prob(TestData,m_all,s_all_biased);
 
 
 % computing P(x|C) = P(x1|C)*P(x2|C)*... 
