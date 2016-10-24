@@ -3,7 +3,7 @@ fprintf('1st question ...\n Loading train.txt and printing 131-th digit\n');
 A = load('train.txt');			% opening training file
 B = reshape(A(131,2:end),16,16);	
 figure;	
-imagesc(B);	
+imagesc(B); % comment just for matlab uses	
 		
 title ('Image of 131-th Digit');
 
@@ -32,14 +32,14 @@ fprintf('Variance of pixel of 0s in vector s2\n');
 fprintf('--------------------------------\n 5th question ...\n');
 
 figure;
-imagesc(reshape(m2,16,16)');
+%imagesc(reshape(m2,16,16)');
 
 title('Image of digit 0 from mean values');
 
 fprintf('6th question ...\n');
 
 figure;
-imagesc(reshape(s2,16,16)');
+%imagesc(reshape(s2,16,16)');
 
 title('Image of digit 0 from var values');
 
@@ -54,7 +54,7 @@ for i=1:10
 	m_all(:,i) = mean(temp);
 	s_all(:,i) = var(temp);
 	subplot(2,5,i);			
-	imagesc(reshape(m_all(:,i)',16,16)');
+	%imagesc(reshape(m_all(:,i)',16,16)');
 		
 	title(['Digit ',num2str(i-1)])	;
 	
@@ -137,4 +137,41 @@ p_bayes = find(TestData(:,1) == (idx(:)-1) );		% finding correct matches
 fprintf('Success rate for Bayes : %f%%\n',size(p_bayes,1)/size(TestData,1)*100 );
 
 
+%% 
+%% Bhma 12
+fprintf('--------------------------------\n 12th question ...\n Bayesian Classifier with variance=1\n');
 
+s_all_bima_12 = ones(256,10);
+Px_depC_12 = dependent_prob(TestData,m_all,s_all_bima_12);
+
+
+% computing P(x|C) = P(x1|C)*P(x2|C)*... 
+
+for c=1:10
+    for x=1:size(TestData)
+%         Px_depC_updated(x,c) = prod(Px_depC(x,:,c));
+%     end
+        Px_depC_updated_12(x,c) = prod(Px_depC_12(x,:,c));
+    end
+end
+
+% computing Bayes formula 
+
+for i=1:size(TestData)
+    Px_12(i) = sum(Px_depC_updated_12(i,:) * apriori');
+    for c=1:size(Classes,2)
+        h_x_12(c,i) = apriori(c) * Px_depC_updated_12(i,c)/Px_12(i);
+    end
+end
+
+% computing maximum h_x for classification 
+
+for j=1:size(TestData,1)
+	[b_,idx(j)] = max(h_x_12(:,j));
+    end
+
+p_bayes = find(TestData(:,1) == (idx(:)-1) );		% finding correct matches
+fprintf('Success rate for Bayes with variance 1 : %f%%\n',size(p_bayes,1)/size(TestData,1)*100 );
+
+%%
+%%Bhma 13
