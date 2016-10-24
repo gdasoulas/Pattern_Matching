@@ -104,11 +104,29 @@ fprintf('--------------------------------\n 11th question ...\n Bayesian Classif
 
 s_all = s_all + (1/(2*pi)); % biased 
 
-for i=1:10
-    Px_depC = dependent_prob(TestData,m_all,s_all,i);
+Px_depC = dependent_prob(TestData,m_all,s_all);
+
+
+
+%%
+
+for c=1:10
+    for x=1:size(TestData)
+%         Px_depC_updated(x,c) = prod(Px_depC(x,:,c));
+%     end
+        Px_depC_updated(x,c) = prod(Px_depC(x,:,c));
+    end
 end
 
-%h_x = apriori * 
+for i=1:size(TestData)
+    Px(i) = sum(Px_depC_updated(i,:) * apriori');
+    for c=1:size(Classes,2)
+        h_x(c,i) = apriori(c) * Px_depC_updated(i,c)/Px(i);
+    end
+
+    
+end
+
 
 
 
