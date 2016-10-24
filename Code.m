@@ -107,8 +107,7 @@ s_all = s_all + (1/(2*pi)); % biased
 Px_depC = dependent_prob(TestData,m_all,s_all);
 
 
-
-%%
+% computing P(x|C) = P(x1|C)*P(x2|C)*... 
 
 for c=1:10
     for x=1:size(TestData)
@@ -118,15 +117,23 @@ for c=1:10
     end
 end
 
+% computing Bayes formula 
+
 for i=1:size(TestData)
     Px(i) = sum(Px_depC_updated(i,:) * apriori');
     for c=1:size(Classes,2)
         h_x(c,i) = apriori(c) * Px_depC_updated(i,c)/Px(i);
     end
-
-    
 end
 
+% computing maximum h_x for classification 
+
+for j=1:size(TestData,1)
+	[b_,idx(j)] = max(h_x(:,j));
+    end
+
+p_bayes = find(TestData(:,1) == (idx(:)-1) );		% finding correct matches
+fprintf('Success rate for Bayes : %f%%\n',size(p_bayes,1)/size(TestData,1)*100 );
 
 
 
