@@ -116,7 +116,7 @@ end
 fprintf('Success rate for 1nn with 100 test cases and 1000 train cases: %f%%\n',counter/size(lessTest,1)*100 );
 
 
-%% Bhma 14
+%% Bhma 14a
 
 %Nearest neighbor 
 
@@ -130,4 +130,33 @@ end
 
 fprintf('Success rate for 1nn : %f%%\n',counter/size(TestData,1)*100 );
 
+
+%% Bhma 14b
+
+for i=1:size(TestData)
+    Eu_dist(i,:)= sum(bsxfun(@minus,TestData(i,2    :end),A(:,2:end)).^2 ,2);
+end
+
+%%
+[ED_sorted,I_ED_sorted] = sort(Eu_dist,2);
+
+k=3;
+
+idx = I_ED_sorted(:,1:k);
+
+neighbors=reshape(A(idx(:,:),1),size(TestData,1),k);
+neighbors=sort(neighbors,2);
+
+for i=1:2007
+    final_idx(i)=test1(neighbors(i,:),k);
+end
+
+p_nn = find(TestData(:,1) == final_idx(:));		% finding correct matches
+
+p_ll = find(TestData(:,1) ~= final_idx(:) );		% finding correct matches
+
+
+% p_nn = find(TestData(:,1) == A(idx(:,k),1) );		% finding correct matches
+
+fprintf('Success rate for k=%d -nn : %f%%\n',k,size(p_nn,1)/size(TestData,1)*100 );
 
