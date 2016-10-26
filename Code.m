@@ -96,4 +96,3 @@ for j=1:size(TestData,1)
 p_bayes = find(TestData(:,1) == (idx(:)-1) );		% finding correct matches
 fprintf('Success rate for Bayes with Var=one : %f%%\n',size(p_bayes,1)/size(TestData,1)*100 );
 
-
