@@ -102,18 +102,12 @@ fprintf('Success rate for Bayes with Var=one : %f%%\n',size(p_bayes,1)/size(Test
 %% Bhma 13
 
 %Nearest neighbor 
-for i=1:size(TestData)
-    for j=1:size(A)
-        Eu_dist(i,j) = (sum((TestData(i,2:end)-A(j,2:end)).^2));
-    end
-end
 
-%%
-counter = 0
+counter = 0;
 for i=1:size(TestData)
-    [~,idx] = min(Eu_dist(i,:));
+    [~,idx]= min(sum(bsxfun(@minus,TestData(i,2:end),A(:,2:end)).^2 ,2));
     if A(idx,1) == TestData(i,1)
-        counter =counter+1
+        counter=counter+1;
     end
 end
 
