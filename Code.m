@@ -104,6 +104,23 @@ fprintf('Success rate for Bayes with Var=one : %f%%\n',size(p_bayes,1)/size(Test
 %Nearest neighbor 
 
 counter = 0;
+lessTrain=A(1:1000,:);
+lessTest=TestData(1:100,:);
+for i=1:size(lessTest)
+    [~,idx]= min(sum(bsxfun(@minus,lessTest(i,2:end),lessTrain(:,2:end)).^2 ,2));
+    if A(idx,1) == TestData(i,1)
+        counter=counter+1;
+    end
+end
+
+fprintf('Success rate for 1nn with 100 test cases and 1000 train cases: %f%%\n',counter/size(lessTest,1)*100 );
+
+
+%% Bhma 14
+
+%Nearest neighbor 
+
+counter = 0;
 for i=1:size(TestData)
     [~,idx]= min(sum(bsxfun(@minus,TestData(i,2:end),A(:,2:end)).^2 ,2));
     if A(idx,1) == TestData(i,1)
@@ -112,4 +129,5 @@ for i=1:size(TestData)
 end
 
 fprintf('Success rate for 1nn : %f%%\n',counter/size(TestData,1)*100 );
+
 
