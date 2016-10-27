@@ -159,4 +159,31 @@ p_ll = find(TestData(:,1) ~= final_idx(:) );		% finding correct matches
 % p_nn = find(TestData(:,1) == A(idx(:,k),1) );		% finding correct matches
 
 fprintf('Success rate for k=%d -nn : %f%%\n',k,size(p_nn,1)/size(TestData,1)*100 );
+%% Bhma 15
+filter_categories_2 =@(x) (@(y)(x==y) + (-1)*(x~=y)); %lambda just because I have a biggg DICK
+opt=statset('MaxIter',500000); %it covergesssss
+opt2=statset('MaxIter',100000); 
+for i=1:10 %SLOW BUT PEOS M
+    SvnStruct_linear(i) = svmtrain(A(:,2:end),arrayfun(filter_categories_2(i-1),A(:,1)),'options',opt);
+    SvnStruct_poly(i) = svmtrain(A(:,2:end),arrayfun(filter_categories_2(i-1),A(:,1)),'kernel_function','polynomial','polyorder',3,'options',opt2); %test order
+end
+%%
+counter=0;
+counter2=0;
+for i=1:10
+    G_l=svmclassify(SvnStruct_linear(i),TestData(:,2:end));
+    G_p=svmclassify(SvnStruct_poly(i),TestData(:,2:end));
+    for j=1:size(G_l)
+        if(G_l(j)==1 && (i-1)==TestData(j,1))
+            counter=counter+1;
+        end
+        if(G_p(j)==1 && (i-1)==TestData(j,1))
+            counter2=counter2+1;
+        end          
+    end
+
+end
+%maybe we need to check if it is clasified as 2 categories?
+fprintf('Success rate for 1inear : %f%%\n',counter/size(TestData,1)*100 );
+fprintf('Success rate for poly : %f%%\n',counter2/size(TestData,1)*100 );
 
