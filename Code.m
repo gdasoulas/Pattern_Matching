@@ -12,7 +12,7 @@ for i=1:10
 end
 
 TestData = load('test.txt');
-
+class3=zeros(3,2007); 
 %% Bhma 10
 
 fprintf('--------------------------------\n 10th question ...\n Computing A priori Probabilities\n');
@@ -56,6 +56,7 @@ end
 
 for j=1:size(TestData,1)
 	[~,idx(j)] = max(h_x(:,j));
+    class3(1,j)=idx(j)-1;
     end
 
 p_bayes = find(TestData(:,1) == (idx(:)-1) );		% finding correct matches
@@ -117,12 +118,12 @@ fprintf('Success rate for 1nn with 100 test cases and 1000 train cases: %f%%\n',
 
 
 %% Bhma 14a
-
 %Nearest neighbor 
 
 counter = 0;
 for i=1:size(TestData)
     [~,idx]= min(sum(bsxfun(@minus,TestData(i,2:end),A(:,2:end)).^2 ,2));
+    class3(2,i)=A(idx,1); %take NNR1 res
     if A(idx,1) == TestData(i,1)
         counter=counter+1;
     end
@@ -179,11 +180,23 @@ for i=1:10
         end
         if(G_p(j)==1 && (i-1)==TestData(j,1))
             counter2=counter2+1;
-        end          
+        end
+        if(G_p(j)==1)
+            class3(3,j)=i-1;
+        end
     end
-
 end
 %maybe we need to check if it is clasified as 2 categories?
 fprintf('Success rate for 1inear : %f%%\n',counter/size(TestData,1)*100 );
 fprintf('Success rate for poly : %f%%\n',counter2/size(TestData,1)*100 );
 
+%% bima 16 a
+% We are going to use Svn poly and bayers and NNR-1
+counter=0;
+Most_Freq=mode(class3);
+for i=1:2007
+    if(TestData(i,1)==Most_Freq(i))
+        counter=counter+1;
+    end
+end
+fprintf('Success rate for 3 class : %f%%\n',counter/size(TestData,1)*100 );
