@@ -200,3 +200,15 @@ for i=1:2007
     end
 end
 fprintf('Success rate for 3 class : %f%%\n',counter/size(TestData,1)*100 );
+%% bima 17b
+    indi_i=find(A(:,1)==0);
+    percent_i= ceil(size(indi_i)*0.8);
+    A_80=[A(indi_i(1:percent_i),:)];
+    A_20=[A(indi_i(percent_i+1:end),:)];
+for i=2:10
+    indi_i=find(A(:,1)==i-1);
+    percent_i= ceil(size(indi_i)*0.8);
+    A_80=[A_80;A(indi_i(1:percent_i),:)];
+    A_20=[A_20;A(indi_i(percent_i+1:end),:)];
+end
+%Rest = ;
