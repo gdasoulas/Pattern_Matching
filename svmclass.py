@@ -32,10 +32,12 @@ for i in range(0,len(TestData)):
 counter=0
 
 for i in range(0,len(res)):
-	counter = counter + (TestData[i,0]==res[i])
+	if TestData[i,0]==res[i]:
+		counter = counter+1
+	else: 
+		print "Error in i=",(i+1)," : TestData :",TestData[i,0]," and predictor : ",res[i]
 
-
-print "Success rate for SVM : ",counter[0]/float(len(TestData))*100
+print "Success rate for SVM : ",counter/float(len(TestData))*100
 
 
 
