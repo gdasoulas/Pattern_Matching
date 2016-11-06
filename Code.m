@@ -121,7 +121,7 @@ fprintf('--------------------------------\n 14th question - a ...\n 1-Nearest Ne
 
 
 k=1;
-p_1nn_success = k_nearest_neighbor(TrainData,TestData,Eu_dist,k);
+p_1nn_success = k_weighted_nearest_neighbor(TrainData,TestData,Eu_dist,k);
 
 fprintf('Success rate for k=%d-nn : %f%%\n',k,p_1nn_success*100 );
 
@@ -132,17 +132,17 @@ clear k idx counter
 fprintf('--------------------------------\n 14th question - b ...\n k-Nearest Neighbor \n');
 
 k=3;
-p_nn_success = k_nearest_neighbor(TrainData,TestData,Eu_dist,k);
+p_nn_success = k_weighted_nearest_neighbor(TrainData,TestData,Eu_dist,k);
 % p_nn_success = k_weighted_nearest_neighbor(TrainData,TestData,Eu_dist,k);
 fprintf('Success rate for k=%d-nn : %f%%\n',k,p_nn_success*100 );
 
 clear k;
 
 %% Bhma 15
-filter_categories_2 =@(x) (@(y)(x==y) + (-1)*(x~=y)); %lambda just because I have a biggg DICK
+filter_categories_2 =@(x) (@(y)(x==y) + (-1)*(x~=y)); %lambda
 opt=statset('MaxIter',500000); %it covergesssss
 opt2=statset('MaxIter',100000); 
-for i=1:10 %SLOW BUT PEOS M
+for i=1:10 
     SvnStruct_linear(i) = svmtrain(TrainData(:,2:end),arrayfun(filter_categories_2(i-1),TrainData(:,1)),'options',opt);
     SvnStruct_poly(i) = svmtrain(TrainData(:,2:end),arrayfun(filter_categories_2(i-1),TrainData(:,1)),'kernel_function','polynomial','polyorder',3,'options',opt2); %test order
 end
@@ -189,4 +189,25 @@ for i=2:10
     A_80=[A_80;A(indi_i(1:percent_i),:)];
     A_20=[A_20;A(indi_i(percent_i+1:end),:)];
 end
+%confidence score bayers
 %Rest = ;
+for i=Classes
+    temp = A_80(find(A_80(:,1)==(i-1)),:) ;	% finding all digits ,which correspond to digit i-1
+    temp = temp(:,2:end);
+    m_all2(:,i) = mean(temp);
+    s_all2(:,i) = var(temp);
+end
+apriori2 = apriori_comp(A_80,Classes);
+
+s_all_biased2 = s_all2 + (1/(4*pi+3)); % biased with 1/(4π+3) for better estimation     
+h_x = bayes_classifier(A_20,m_all2,s_all_biased2,apriori2,Classes);
+
+% computing maximum h_x for classification 
+
+for j=1:size(A_20,1)
+	[~,idx(j)] = max(h_x(:,j));
+end
+conf_bayers=zero(10);
+for i=1:10
+    conf_bayers(i)= size(find( (A_20(:,1) == idx(:)-1) && A_20==(i-1) ),1)/ size(find(A_20(:,1)==i-1),1);
+end
