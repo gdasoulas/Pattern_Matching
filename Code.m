@@ -1,56 +1,41 @@
 %% First Lab - After first 9 questions ...
 
+clear all;  clc;
+
 fprintf('First Questions: Loading train.txt ,test.txt and computing m_all,s_all \n');
 
-A = load('train.txt');			% opening training file
+TrainData = load('train.txt');			% opening training file
+Classes = [1:10];
 
-for i=1:10
-	temp = A(find(A(:,1)==(i-1)),:) ;	% finding all digits ,which correspond to digit i-1
-	temp = temp(:,2:end);			
-	m_all(:,i) = mean(temp);
-	s_all(:,i) = var(temp);	
+for i=Classes
+    temp = TrainData(find(TrainData(:,1)==(i-1)),:) ;	% finding all digits ,which correspond to digit i-1
+    temp = temp(:,2:end);
+    m_all(:,i) = mean(temp);
+    s_all(:,i) = var(temp);
 end
 
+
 TestData = load('test.txt');
-class3=zeros(3,2007); 
+
+class3=zeros(3,2007);
+
+ clear i temp;
+ 
 %% Bhma 10
 
 fprintf('--------------------------------\n 10th question ...\n Computing A priori Probabilities\n');
 
-Classes = [0:9];
+apriori = apriori_comp(TrainData,Classes);
 
-for i=1:10
-    apriori(i)=size(find(A(:,1)==i-1),1)/size(A,1);
-end
 %% Bhma 11
 
 
 fprintf('--------------------------------\n 11th question ...\n Bayesian Classifier\n');
 
-%s_all_biased = s_all + (1/2*pi); % biased with 1/2π
 s_all_biased = s_all + (1/(4*pi+3)); % biased with 1/(4π+3) for better estimation 
-
-Px_depC = dependent_prob(TestData,m_all,s_all_biased);
-
-
-% computing P(x|C) = P(x1|C)*P(x2|C)*... 
-
-for c=1:10
-    for x=1:size(TestData)
-%         Px_depC_updated(x,c) = prod(Px_depC(x,:,c));
-%     end
-        Px_depC_updated(x,c) = prod(Px_depC(x,:,c));
-    end
-end
-
-% computing Bayes formula 
-
-for i=1:size(TestData)
-    Px(i) = sum(Px_depC_updated(i,:) * apriori');
-    for c=1:size(Classes,2)
-        h_x(c,i) = apriori(c) * Px_depC_updated(i,c)/Px(i);
-    end
-end
+%s_all_biased = s_all + (1/2*pi); % biased with 1/2π
+    
+h_x = bayes_classifier(TestData,m_all,s_all_biased,apriori,Classes);
 
 % computing maximum h_x for classification 
 
@@ -60,36 +45,20 @@ for j=1:size(TestData,1)
     end
 
 p_bayes = find(TestData(:,1) == (idx(:)-1) );		% finding correct matches
-p_fail = find(TestData(:,1) ~= (idx(:)-1) )
-fprintf('Success rate for Bayes : %f%%\n',size(p_bayes,1)/size(TestData,1)*100 );
+bayes_failure= find(TestData(:,1) ~= (idx(:)-1) );		% finding wrong matches
+
+bayes_success = size(p_bayes,1)/size(TestData,1);
+fprintf('Success rate for Bayes : %f%%\n', bayes_success*100 );
+
+clear j idx p_bayes;
 
 %% Bhma 12
 
-s_all_one=ones(256,10);
-
 fprintf('--------------------------------\n 12th question ...\n Bayesian Classifier for Var=1\n');
 
-Px_depC = dependent_prob(TestData,m_all,s_all_one);
+s_all_one=ones(256,10);
 
-
-% computing P(x|C) = P(x1|C)*P(x2|C)*... 
-
-for c=1:10
-    for x=1:size(TestData)
-%         Px_depC_updated(x,c) = prod(Px_depC(x,:,c));
-%     end
-        Px_depC_updated(x,c) = prod(Px_depC(x,:,c));
-    end
-end
-
-% computing Bayes formula 
-
-for i=1:size(TestData)
-    Px(i) = sum(Px_depC_updated(i,:) * apriori');
-    for c=1:size(Classes,2)
-        h_x(c,i) = apriori(c) * Px_depC_updated(i,c)/Px(i);
-    end
-end
+h_x = bayes_classifier(TestData,m_all,s_all_one,apriori,Classes);
 
 % computing maximum h_x for classification 
 
@@ -98,7 +67,10 @@ for j=1:size(TestData,1)
     end
 
 p_bayes = find(TestData(:,1) == (idx(:)-1) );		% finding correct matches
-fprintf('Success rate for Bayes with Var=one : %f%%\n',size(p_bayes,1)/size(TestData,1)*100 );
+bayes_success_var_1 = size(p_bayes,1)/size(TestData,1);
+fprintf('Success rate for Bayes with Var=one : %f%%\n',bayes_success_var_1*100 );
+
+clear j p_bayes s_all_one h_x idx
 
 %% Bhma 13
 
@@ -117,56 +89,61 @@ end
 fprintf('Success rate for 1nn with 100 test cases and 1000 train cases: %f%%\n',counter/size(lessTest,1)*100 );
 
 
+%% Bhma 14
+% Preprocess for NN
+% Finding eucleideian distances 
+
+fprintf('--------------------------------\n Preprocessing 14th question ...\n Computing Eucleideian Distances \n');
+
+% for i=1:size(TestData)
+%        Eu_dist(i,:)= sum(bsxfun(@minus,TestData(i,2:end),TrainData(:,2:end)).^2 ,2);
+% end
+
+Eu_dist = pdist2(TestData(:,2:end),TrainData(:,2:end),'euclidean');
+
+clear i 
+%% Bhma 14-extra
+% Preprocess for NN
+% Finding manhattan distances 
+
+fprintf('--------------------------------\n Preprocessing 14th question ...\n Computing Manhattan Distances \n');
+
+for i=1:size(TestData)
+       Man_dist(i,:)= sum(abs(bsxfun(@minus,TestData(i,2:end),TrainData(:,2:end))) ,2);
+end
+
+clear i 
+
 %% Bhma 14a
 %Nearest neighbor 
 
-counter = 0;
-for i=1:size(TestData)
-    [~,idx]= min(sum(bsxfun(@minus,TestData(i,2:end),A(:,2:end)).^2 ,2));
-    class3(2,i)=A(idx,1); %take NNR1 res
-    if A(idx,1) == TestData(i,1)
-        counter=counter+1;
-    end
-end
-
-fprintf('Success rate for 1nn : %f%%\n',counter/size(TestData,1)*100 );
+fprintf('--------------------------------\n 14th question - a ...\n 1-Nearest Neighbor \n');
 
 
+k=1;
+p_1nn_success = k_nearest_neighbor(TrainData,TestData,Eu_dist,k);
+
+fprintf('Success rate for k=%d-nn : %f%%\n',k,p_1nn_success*100 );
+
+
+clear k idx counter
 %% Bhma 14b
 
-for i=1:size(TestData)
-    Eu_dist(i,:)= sum(bsxfun(@minus,TestData(i,2    :end),A(:,2:end)).^2 ,2);
-end
-
-%%
-[ED_sorted,I_ED_sorted] = sort(Eu_dist,2);
+fprintf('--------------------------------\n 14th question - b ...\n k-Nearest Neighbor \n');
 
 k=3;
+[p_nn_success,pll,neigh,final] = k_nearest_neighbor(TrainData,TestData,Eu_dist,k);
+fprintf('Success rate for k=%d-nn : %f%%\n',k,p_nn_success*100 );
 
-idx = I_ED_sorted(:,1:k);
+clear k;
 
-neighbors=reshape(A(idx(:,:),1),size(TestData,1),k);
-neighbors=sort(neighbors,2);
-
-for i=1:2007
-    final_idx(i)=test1(neighbors(i,:),k);
-end
-
-p_nn = find(TestData(:,1) == final_idx(:));		% finding correct matches
-
-p_ll = find(TestData(:,1) ~= final_idx(:) );		% finding correct matches
-
-
-% p_nn = find(TestData(:,1) == A(idx(:,k),1) );		% finding correct matches
-
-fprintf('Success rate for k=%d -nn : %f%%\n',k,size(p_nn,1)/size(TestData,1)*100 );
 %% Bhma 15
 filter_categories_2 =@(x) (@(y)(x==y) + (-1)*(x~=y)); %lambda just because I have a biggg DICK
 opt=statset('MaxIter',500000); %it covergesssss
 opt2=statset('MaxIter',100000); 
 for i=1:10 %SLOW BUT PEOS M
-    SvnStruct_linear(i) = svmtrain(A(:,2:end),arrayfun(filter_categories_2(i-1),A(:,1)),'options',opt);
-    SvnStruct_poly(i) = svmtrain(A(:,2:end),arrayfun(filter_categories_2(i-1),A(:,1)),'kernel_function','polynomial','polyorder',3,'options',opt2); %test order
+    SvnStruct_linear(i) = svmtrain(TrainData(:,2:end),arrayfun(filter_categories_2(i-1),TrainData(:,1)),'options',opt);
+    SvnStruct_poly(i) = svmtrain(TrainData(:,2:end),arrayfun(filter_categories_2(i-1),TrainData(:,1)),'kernel_function','polynomial','polyorder',3,'options',opt2); %test order
 end
 %%
 counter=0;
