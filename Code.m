@@ -131,9 +131,9 @@ clear k idx counter
 
 fprintf('--------------------------------\n 14th question - b ...\n k-Nearest Neighbor \n');
 
-k=3;
-p_nn_success = k_nearest_neighbor(TrainData,TestData,Eu_dist,k);
-% p_nn_success = k_weighted_nearest_neighbor(TrainData,TestData,Eu_dist,k);
+k=15;
+%p_nn_success = k_nearest_neighbor(TrainData,TestData,Eu_dist,k);
+p_nn_success = k_weighted_nearest_neighbor(TrainData,TestData,Eu_dist,k);
 fprintf('Success rate for k=%d-nn : %f%%\n',k,p_nn_success*100 );
 
 clear k;

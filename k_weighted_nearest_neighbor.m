@@ -1,4 +1,4 @@
-function res = k_nearest_neighbor(A,TestData,Eu,k)
+function res = k_weighted_nearest_neighbor(A,TestData,Eu,k)
 %     for i=1:size(TestData)
 %        Eu_dist(i,:)= sum(bsxfun(@minus,TestData(i,2:end),A(:,2:end)).^2 ,2);
 %     end
