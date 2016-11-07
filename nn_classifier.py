@@ -1,5 +1,6 @@
 from sknn.mlp import Classifier, Layer
 import numpy as np
+import sys
 import logging
 
 logging.basicConfig()
@@ -58,8 +59,11 @@ counter=0
 for i in range(0,len(X_test_pred)):
 	if TestData[i,0]==X_test_pred[i]:
 		counter = counter+1
-	#else: 
-	#	print "Error in i=",(i+1)," : TestData :",TestData[i,0]," and predictor : ",res[i]
+
+with open("predictions_mlp.txt","w") as resFile:	 
+	for i in range(0,len(X_test_pred)):
+		resFile.write(str(int(X_test_pred[i]))+"\n")	
+
 
 print "Success rate for MLP classifier : ",counter/float(len(TestData))*100
 
