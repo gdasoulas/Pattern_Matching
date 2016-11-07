@@ -243,18 +243,26 @@ end
 apriori = apriori_comp(A_80,Classes);
 s_all_biased1 = s_all1 + (1/(4*pi+3));
 h_x1 = bayes_classifier(A_20,m_all1,s_all_biased1,apriori,Classes)';
-%%
-k=3;
+
+k=8;
 nnr_conf= k_weigted_conf(A_80,A_20,k);
-total_conf(1,:,:)=h_x1;
+
+!python nn_classifier.py train_80.txt train_20.txt
+confidece_nn = load('confidence_nn.txt');
+
+!python svmclass.py linear train_80.txt train_20.txt
+confidece_smvl = load('confidence_smvlinear.txt');
+%%
+clear total_conf;
+total_conf(1,:,:)=nnr_conf;
 total_conf(2,:,:)=confidece_smv;
-total_conf(3,:,:)=nnr_conf;
+total_conf(3,:,:)=confidece_smvl;
 
 min_conf = min(total_conf);
 max_conf = max(total_conf); 
 
-means=(h_x1 + confidece_smv+nnr_conf)/3;
-multt=(h_x1.*confidece_smv.*nnr_conf);
+means=(nnr_conf + confidece_smv+confidece_smvl)/3;
+multt=(nnr_conf.*confidece_smv.*confidece_smvl);
 
 succ_means=0;
 succ_mult=0;
@@ -286,5 +294,52 @@ fprintf('Success rate for mean : %f%%\n',succ_means/size(A_20,1)*100 );
 fprintf('Success rate for mult : %f%%\n',succ_mult/size(A_20,1)*100 );
 fprintf('Success rate for min : %f%%\n',succ_min/size(A_20,1)*100 );
 fprintf('Success rate for max : %f%%\n',succ_max/size(A_20,1)*100 );
+
+
+%%
+k=8;
+!python svmclass.py poly train.txt test.txt
+confidece_smv_test = load('confidence_smvpoly.txt');
+nnr_conf_test= k_weigted_conf(TrainData,TestData,k);
+!python nn_classifier.py train.txt test.txt
+confidece_nn_test = load('confidence_nn.txt');
+
+!python svmclass.py linear train.txt test.txt
+confidece_smvl_test = load('confidence_smvlinear.txt');
+%%
+clear total_conf;
+total_conf(1,:,:)=nnr_conf_test;
+total_conf(2,:,:)=confidece_smv_test;
+total_conf(3,:,:)=confidece_smvl_test;
+
+min_conf = min(total_conf);
+
+succ_min=0;
+
+
+A_20=TestData;
+for i=1:size(A_20,1)
+
+     [~,idx] = max(min_conf(1,i,:));
+    if(idx-1 == A_20(i,1))
+        succ_min=succ_min+1;
+    end
+    
+end
+
+fprintf('Success rate for min : %f%%\n',succ_min/size(A_20,1)*100 );
+
+%%
+a1=100;
+a2=25;
+a3=50;
+a4=12;
+New_train_data(:,2:11)= a1*nnr_conf + a2*confidece_smvl + a3*confidece_smv + a4*confidece_nn;
+New_test_data(:,2:11)= a1*nnr_conf_test + a2*confidece_smvl_test + a3*confidece_smv_test + a4*confidece_nn_test;
+New_train_data(:,1)=A_20(:,1);
+New_test_data(:,1)=TestData(:,1);
+dlmwrite('train_teleuteo.txt',New_train_data,'delimiter',' ','precision','%.4f');
+dlmwrite('test_teleuteo.txt',New_test_data,'delimiter',' ','precision','%.4f');
+!python nn_classifier.py train_teleuteo.txt test_teleuteo.txt
 
 
