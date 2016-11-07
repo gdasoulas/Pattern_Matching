@@ -54,7 +54,14 @@ y_test = TestData[:,0]
 
 #score = nn.score(X_test, y_test)
 X_test_pred = nn.predict(X_test)
-
+conf=nn.predict_proba(X_test)
+print conf
+filename = "confidence_nn"+".txt"
+#print np.array(conf)
+#conf=[np.ravel(i) for i in conf]
+#print conf
+#conf = map()
+np.savetxt(filename,np.array(conf),'%1.5f',delimiter=' ')
 counter=0
 for i in range(0,len(X_test_pred)):
 	if TestData[i,0]==X_test_pred[i]:

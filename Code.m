@@ -243,8 +243,8 @@ end
 apriori = apriori_comp(A_80,Classes);
 s_all_biased1 = s_all1 + (1/(4*pi+3));
 h_x1 = bayes_classifier(A_20,m_all1,s_all_biased1,apriori,Classes)';
-
-k=2;
+%%
+k=3;
 nnr_conf= k_weigted_conf(A_80,A_20,k);
 total_conf(1,:,:)=h_x1;
 total_conf(2,:,:)=confidece_smv;
