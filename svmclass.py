@@ -29,7 +29,7 @@ TestData = np.array(TestData)
 if sys.argv[1] == 'lin-rest':
 	clf = svm.LinearSVC()
 else:
-	clf = svm.SVC(kernel=sys.argv[1])
+	clf = svm.SVC(kernel=sys.argv[1],probability=True)
 
 clf.fit(TrainData[:,1:], TrainData[:,0])
 
@@ -38,15 +38,20 @@ samp=TestData[17,1:]
 res=[]
 for i in range(0,len(TestData)):
 	res.append(clf.predict([TestData[i,1:]]))
-
+conf=[]
+for i in range(0,len(TestData)):
+	conf.append(clf.predict_proba([TestData[i,1:]]))
 filename ="predictions_svm_"+str(sys.argv[1])+".txt"
 with open(filename,"w") as resFile:	 
 	for i in range(0,len(TestData)):
 		resFile.write(str(int(res[i]))+"\n")
-	
-
+filename = "confidence_smv"+str(sys.argv[1])+".txt"
+print np.array(conf)
+conf=[np.ravel(i) for i in conf]
+print conf
+#conf = map()
+np.savetxt(filename,np.array(conf),'%1.5f',delimiter=' ')
 counter=0
-
 for i in range(0,len(res)):
 	if TestData[i,0]==res[i]:
 		counter = counter+1

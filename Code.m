@@ -231,6 +231,8 @@ end
 dlmwrite('train_80.txt',A_80,'delimiter',' ','precision','%.4f');
 dlmwrite('train_20.txt',A_20,'delimiter',' ','precision','%.4f');
 
+!python svmclass.py poly train_80.txt train_20.txt
+confidece
 
 %Rest = ;
 
