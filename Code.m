@@ -152,7 +152,7 @@ fprintf('--------------------------------\n 15th question ...\n 2st classifier :
 filter_categories_2 =@(x) (@(y)(x==y) + (-1)*(x~=y));
 opt=statset('MaxIter',500000); %it covergesssss
 opt2=statset('MaxIter',100000); 
-for i=1:10 %SLOW BUT PEOS M
+for i=1:10 
     SvnStruct_linear(i) = svmtrain(TrainData(:,2:end),arrayfun(filter_categories_2(i-1),TrainData(:,1)),'options',opt);
     SvnStruct_poly(i) = svmtrain(TrainData(:,2:end),arrayfun(filter_categories_2(i-1),TrainData(:,1)),'kernel_function','polynomial','polyorder',3,'options',opt2); %test order
 end
