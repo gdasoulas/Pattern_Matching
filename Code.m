@@ -149,7 +149,7 @@ fprintf('--------------------------------\n 15th question ...\n 2st classifier :
 !python nn_classifier.py train.txt test.txt
 
 %% Bhma 15
-filter_categories_2 =@(x) (@(y)(x==y) + (-1)*(x~=y)); %lambda just because I have a biggg DICK
+filter_categories_2 =@(x) (@(y)(x==y) + (-1)*(x~=y));
 opt=statset('MaxIter',500000); %it covergesssss
 opt2=statset('MaxIter',100000); 
 for i=1:10 %SLOW BUT PEOS M
