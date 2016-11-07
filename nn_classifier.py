@@ -48,7 +48,17 @@ nn.fit(X_train,y_train)
 
 X_test = TestData[:,1:] 
 y_test = TestData[:,0]
-score = nn.score(X_test, y_test)
 
-print score
+#score = nn.score(X_test, y_test)
+X_test_pred = nn.predict(X_test)
+
+counter=0
+for i in range(0,len(X_test_pred)):
+	if TestData[i,0]==X_test_pred[i]:
+		counter = counter+1
+	#else: 
+	#	print "Error in i=",(i+1)," : TestData :",TestData[i,0]," and predictor : ",res[i]
+
+print "Success rate for MLP classifier : ",counter/float(len(TestData))*100
+
 
