@@ -46,9 +46,9 @@ with open(filename,"w") as resFile:
 	for i in range(0,len(TestData)):
 		resFile.write(str(int(res[i]))+"\n")
 filename = "confidence_smv"+str(sys.argv[1])+".txt"
-print np.array(conf)
+#print np.array(conf)
 conf=[np.ravel(i) for i in conf]
-print conf
+#print conf
 #conf = map()
 np.savetxt(filename,np.array(conf),'%1.5f',delimiter=' ')
 counter=0
