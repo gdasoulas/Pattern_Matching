@@ -232,7 +232,59 @@ dlmwrite('train_80.txt',A_80,'delimiter',' ','precision','%.4f');
 dlmwrite('train_20.txt',A_20,'delimiter',' ','precision','%.4f');
 
 !python svmclass.py poly train_80.txt train_20.txt
-confidece
+confidece_smv = load('confidence_smvpoly.txt');
 
-%Rest = ;
+for i=Classes
+    temp = A_80(find(A_80(:,1)==(i-1)),:) ;	% finding all digits ,which correspond to digit i-1
+    temp = temp(:,2:end);
+    m_all1(:,i) = mean(temp);
+    s_all1(:,i) = var(temp);
+end
+apriori = apriori_comp(A_80,Classes);
+s_all_biased1 = s_all1 + (1/(4*pi+3));
+h_x1 = bayes_classifier(A_20,m_all1,s_all_biased1,apriori,Classes)';
+
+k=2;
+nnr_conf= k_weigted_conf(A_80,A_20,k);
+total_conf(1,:,:)=h_x1;
+total_conf(2,:,:)=confidece_smv;
+total_conf(3,:,:)=nnr_conf;
+
+min_conf = min(total_conf);
+max_conf = max(total_conf); 
+
+means=(h_x1 + confidece_smv+nnr_conf)/3;
+multt=(h_x1.*confidece_smv.*nnr_conf);
+
+succ_means=0;
+succ_mult=0;
+succ_min=0;
+succ_max=0;
+
+
+for i=1:size(A_20,1)
+    [~,idx] = max(means(i,:));
+    if(idx-1 == A_20(i,1))
+        succ_means=succ_means+1;
+    end
+     [~,idx] = max(multt(i,:));
+    if(idx-1 == A_20(i,1))
+        succ_mult=succ_mult+1;
+    end
+     [~,idx] = max(min_conf(1,i,:));
+    if(idx-1 == A_20(i,1))
+        succ_min=succ_min+1;
+    end
+    [~,idx] = max(max_conf(1,i,:));
+    if(idx-1 == A_20(i,1))
+        succ_max=succ_max+1;
+    end
+    
+end
+
+fprintf('Success rate for mean : %f%%\n',succ_means/size(A_20,1)*100 );
+fprintf('Success rate for mult : %f%%\n',succ_mult/size(A_20,1)*100 );
+fprintf('Success rate for min : %f%%\n',succ_min/size(A_20,1)*100 );
+fprintf('Success rate for max : %f%%\n',succ_max/size(A_20,1)*100 );
+
 
