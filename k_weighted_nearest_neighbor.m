@@ -22,11 +22,12 @@ function res = k_weighted_nearest_neighbor(A,TestData,Eu,k)
             final_idx(i) = finidx-1;
    end
     assignin('base','neigh',neighbors);
-    assignin('base','final',final_idx);
-
+    var_name = strcat('Pred_',num2str(k),'_weighted_nn');
+    assignin('base',var_name,final_idx');
+    
     p_nn = find(TestData(:,1) == final_idx(:));		% finding correct matches
     p_ll = find(TestData(:,1) ~= final_idx(:));		% finding wrong matches
-    assignin('base','p_nn_failure',p_ll);
+    assignin('base','p_weighted_nn_failure',p_ll);
 
     p_nn_success = size(p_nn,1)/size(TestData,1);
     res = p_nn_success;
