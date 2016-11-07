@@ -2,13 +2,15 @@ import numpy as np
 import sys
 from sklearn import svm
 
-if len(sys.argv)<2:
-	print "Give an option for kernels: linear or poly?"
+if len(sys.argv)<4:
+	print "Give an option for kernels: linear or poly , train file , test file?"
 	exit()
 TrainData=[]
 TestData=[]
 Classes = range(0,10)
-with open("train.txt") as textFile:
+train_file_name = sys.argv[2]
+test_file_name = sys.argv[3]
+with open(train_file_name) as textFile:
     lines = [line.split() for line in textFile]
     for line in lines:
     	int_line=[float(x) for x in line]
@@ -16,7 +18,7 @@ with open("train.txt") as textFile:
 
 TrainData = np.array(TrainData)
 
-with open("test.txt") as textFile:
+with open(test_file_name) as textFile:
     lines = [line.split() for line in textFile]
     for line in lines:
     	int_line=[float(x) for x in line]

@@ -134,19 +134,19 @@ clear k;
 %  running SVM script 
 fprintf('--------------------------------\n 15th question ...\n 1st classifier : SVM implementation in python \n');
 
-!python svmclass.py linear
+!python svmclass.py linear train.txt test.txt
 Pred_svm_linear = load('predictions_svm_linear.txt');	
 
-!python svmclass.py poly
+!python svmclass.py poly train.txt test.txt
 Pred_svm_poly = load('predictions_svm_poly.txt');	
 
-!python svmclass.py lin-rest
+!python svmclass.py lin-rest train.txt test.txt
 Pred_svm_lin_rest = load('predictions_svm_poly.txt');	
 
 %%
 
 fprintf('--------------------------------\n 15th question ...\n 2st classifier : MLP implementation in python \n');
-!python nn_classifier.py
+!python nn_classifier.py train.txt test.txt
 
 %% Bhma 15
 filter_categories_2 =@(x) (@(y)(x==y) + (-1)*(x~=y)); %lambda just because I have a biggg DICK
@@ -228,5 +228,9 @@ for i=2:10
     A_80=[A_80;A(indi_i(1:percent_i),:)];
     A_20=[A_20;A(indi_i(percent_i+1:end),:)];
 end
+dlmwrite('train_80.txt',M,'delimiter',' ');
+dlmwrite('train_20.txt',M,'delimiter',' ');
+
+
 %Rest = ;
 

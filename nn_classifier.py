@@ -4,12 +4,14 @@ import logging
 
 logging.basicConfig()
 
+train_file_name = sys.argv[1]
+test_file_name = sys.argv[2]
 
 TrainData=[]
 TestData=[]
 Classes = range(0,10)
 
-with open("train.txt") as textFile:
+with open(train_file_name) as textFile:
     lines = [line.split() for line in textFile]
     for line in lines:
     	int_line=[float(x) for x in line]
@@ -17,7 +19,7 @@ with open("train.txt") as textFile:
 
 TrainData = np.array(TrainData)
 
-with open("test.txt") as textFile:
+with open(test_file_name) as textFile:
     lines = [line.split() for line in textFile]
     for line in lines:
     	int_line=[float(x) for x in line]
