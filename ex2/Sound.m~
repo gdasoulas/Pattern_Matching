@@ -3,6 +3,7 @@ classdef Sound
         sample
         frames
         fft_frames
+        class_
     end
     
     methods
@@ -11,8 +12,9 @@ classdef Sound
 
         end
         function obj = fft_of_frames(obj)
-            fft_frames=fft(frames);
+            obj.fft_frames=fft(obj.frames);
         end
+   
         function res= preface1(n)
             res=kroneckerDelta(n,0) - (9409*kroneckerDelta(n-1,0)/1000)
         end
@@ -25,19 +27,19 @@ classdef Sound
             T=0.25;
             sample=obj.sample;
             T_over=0.10;
-            rate= T*f;
-            rate2=T_over*f;
+            rate= floor(T*f);
+            rate2=floor(T_over*f);
             frames=zeros(number_frames(obj),rate);
             i=1;
             start=1;
             while start<size(sample,1)
-                fprintf('%d %d ',start,rate);
-                frames(i,1:rate)=sample(start:rate);
+                k=start+rate-1;
+                frames(i,1:rate)=sample(start:k);
                 start=start+rate-rate2;
                 i=i+1;
                 if start+rate>size(sample,1)
                     if start-size(sample,1)>0
-                        frames(i,0:(rate-size(sample,1)))=sample(start:end);
+                        frames(i,1:(rate-size(sample,1)))=sample(start:end);
                         i=i+1;
                     end
                     break
@@ -46,7 +48,7 @@ classdef Sound
             i=i-1;
             for j=1:i
                 for k=1:size(frames,2)
-                    frames(j,k)=frames(j,k)* (0.54-0.46*cos((2*pi*(k*(j-1)*i))/(i-1)));
+                    frames(j,k)=frames(j,k)* (0.54-0.46*cos((2*pi*(k*(j-1)*rate))/(rate-1)));
                 end
             end
             obj.frames=frames;      
@@ -74,10 +76,11 @@ classdef Sound
         end
         function obj=toframes2(obj) %ena apo ta 2 einai to sosto
             i=number_frames(obj);
+            rate=0.25*16000;
             frames=zeros(i,size(sample,1));
             for j=1:i
                 for k=1:size(frames,2)
-                    frames(j,k)=samples(j,k)* (0.54-0.46*cos((2*pi*(k*(j-1)*i))/(i-1)));
+                    frames(j,k)=samples(j,k)* (0.54-0.46*cos((2*pi*(k*(j-1)*rate))/(rate-1)));
                 end
             end
             obj.frames=frames;

@@ -8,27 +8,19 @@ classdef Sound
     methods
         function obj=Sound(name)
             [obj.sample,a_ ]=audioread(strcat('train/', name));
+            % let's automize it;
+            obj=obj.preface;
+            obj=obj.toframes1;
+            obj=obj.fft_of_frames;
 
         end
         function obj = fft_of_frames(obj)
-            obj.fft_frames=fft(obj.frames);
-        end
-        function obj = mel(obj)
-            nyquist=16000/2;
-            low_h=20; % 20hz is lowest hz we can hear, in mel is near zero so, lets take it as zero
-            mel_up= 1127*log(1+nyquist/700);
-            
-            for i=1:24
-                freq_array(i)= 700*( exp(((i-1)*mel_up/23)/1127 )-1); %inverse
+            for i=1:size(obj.frames,1)
+             fft_frames(i)=Frames(fft(obj.frames(i,:)));
             end
-            my_filter= 
-            %next steps:
-            %apply filter to fft
-            %H_i(f)=(f-freq_array(i-1))/(freq_array(i)-freq_Array(i-1))
-            %freq(i)<f<freq(i+1)
-            % (abs(fft_fnames).^2)./lenght(fft_fnames) Energy per result 
-            
+            obj.fft_frames=fft_frames;
         end
+   
         function res= preface1(n)
             res=kroneckerDelta(n,0) - (9409*kroneckerDelta(n-1,0)/1000)
         end
