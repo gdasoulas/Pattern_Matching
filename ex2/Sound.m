@@ -30,9 +30,9 @@ classdef Sound
         end
         function obj =toframes1(obj)
             f=16000; %16khz
-            T=0.25;
+            T=0.025;
             sample=obj.sample;
-            T_over=0.10;
+            T_over=0.010;
             rate= floor(T*f);
             rate2=floor(T_over*f);
             frames=zeros(number_frames(obj),rate);
@@ -61,9 +61,9 @@ classdef Sound
         end
         function i=number_frames(obj)
             f=16000; %16khz
-            T=0.25;
+            T=0.025;
             sample=obj.sample;
-            T_over=0.10;
+            T_over=0.010;
             rate= T*f;
             rate2=T_over*f;
             i=1;
@@ -82,7 +82,7 @@ classdef Sound
         end
         function obj=toframes2(obj) %ena apo ta 2 einai to sosto
             i=number_frames(obj);
-            rate=0.25*16000;
+            rate=0.025*16000;
             frames=zeros(i,size(sample,1));
             for j=1:i
                 for k=1:size(frames,2)
