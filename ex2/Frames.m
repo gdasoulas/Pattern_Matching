@@ -15,6 +15,7 @@ classdef Frames
             obj.Framed=fourier;
             obj=obj.mel;
             obj=obj.Matlab_dct;
+            obj.DCT_energy(15:end)=0;
             obj=obj.IMatlab_dct;
             obj.Reconstruct=idct(obj.DCT_energy); %reverse
         end

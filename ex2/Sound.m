@@ -20,7 +20,17 @@ classdef Sound
             end
             obj.fft_frames=fft_frames;
         end
-   
+        function [mean1,mean2]=getDCTMean(obj,k1,k2)
+            mean1=0;
+            mean2=0;
+            for i=1:size(obj.fft_frames,1)
+                mean1=mean1+obj.fft_frames(i).DCT_energy(k1);
+                mean2=mean2+obj.fft_frames(i).DCT_energy(k2);
+
+            end
+            mean1=mean1/size(obj.fft_frames,1);
+            mean2=mean2/size(obj.fft_frames,1);
+        end
         function res= preface1(n)
             res=kroneckerDelta(n,0) - (9409*kroneckerDelta(n-1,0)/1000)
         end
