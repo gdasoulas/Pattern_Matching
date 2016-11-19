@@ -35,8 +35,9 @@ classdef Sound
             res=kroneckerDelta(n,0) - (9409*kroneckerDelta(n-1,0)/1000)
         end
         function obj =preface(obj)
-              second=[1,-0.9409];
-              obj.sample=conv(obj.sample,second); %maybe?
+              %second=[1,-0.9409];
+              second=[0,1,-0.9409]; % I like it better
+              obj.sample=conv(obj.sample,second); 
         end
         function obj =toframes1(obj)
             f=16000; %16khz
