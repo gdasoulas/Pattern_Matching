@@ -30,10 +30,12 @@ classdef Frames
          function obj = mel(obj)
             nyquist=16000/2;
             low_h=20; % 20hz is lowest hz we can hear, in mel is near zero so, lets take it as zero
+            low_h=1127*log(1+low_h/700);
             mel_up= 1127*log(1+nyquist/700);
+            mels=linspace(low_h,mel_up,24);
             fft_frames=obj.Framed;
             for i=1:24
-                freq_array(i)= 700*( exp(((i-1)*mel_up/23)/1127 )-1); %inverse
+               freq_array(i)= 700*( exp(mels(i)/1127 )-1); %inverse
             end
             %next steps:
             %apply filter to fft
