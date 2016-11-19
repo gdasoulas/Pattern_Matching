@@ -46,7 +46,6 @@ classdef Frames
             freq_array=floor(freq_array.* (size(fft_frames,2)+1)/(16000));
             
             H=zeros(24,size(fft_frames,2));
-            freq_array(1)=2; %test;
             for j=1:freq_array(1)
                     H(1,j)=j/(freq_array(1));
             end
