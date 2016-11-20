@@ -7,6 +7,7 @@ classdef Frames
         Energy
         Log_energy;
         DCT_energy;
+        DCT_energy_init;
         Reconstruct;
     end
     
@@ -16,6 +17,7 @@ classdef Frames
             obj=obj.mel;
             obj=obj.Matlab_dct;
             obj.DCT_energy(15:end)=0;
+            obj.DCT_energy_init=obj.DCT_energy(1:13);
             obj=obj.IMatlab_dct;
             obj.Reconstruct=idct(obj.DCT_energy); %reverse
         end
@@ -53,7 +55,7 @@ classdef Frames
                    H(1,j)=(freq_array(2)-j)/(freq_array(2)-freq_array(1));
             end
             for j=freq_array(23):freq_array(24)
-                    H(23,j)=(j-freq_array(23))/(freq_array(24)-freq_array(23));
+                    H(24,j)=(j-freq_array(23))/(freq_array(24)-freq_array(23));
             end
             for i=2:23
                 for j=freq_array(i-1):freq_array(i)
