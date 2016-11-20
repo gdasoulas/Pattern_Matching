@@ -11,6 +11,10 @@ classdef Sound
             % let's automize it;
             obj=obj.preface;
             obj=obj.toframes1;
+            size(obj.frames);
+            obj=obj.toframes3;
+            size(obj.frames);
+            obj.frames=obj.frames';
             obj=obj.fft_of_frames;
 
         end
@@ -48,10 +52,18 @@ classdef Sound
             rate2=floor(T_over*f);
             frames=buffer(sample,rate,rate2);
             w=hamming(rate);
-            for i=1:size(frames,1)
-                frames(i)=frames(i).*w;
+            frames=frames';
+            size(frames)
+            size(w');
+           % for i=1:size(frames,1)
+           %     frames(i,:)=frames(i,:).*(w');
+           % end
+            for j=1:size(frames,1)
+                for k=1:size(frames,2)
+                    frames(j,k)=frames(j,k)* (0.54-0.46*cos((2*pi*(k*(j-1)*rate))/(rate-1)));
+                end
             end
-            obj.frames=frames;
+            obj.frames=frames';
         end
         function obj =toframes1(obj)
             f=16000; %16khz
