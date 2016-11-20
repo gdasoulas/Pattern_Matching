@@ -36,8 +36,22 @@ classdef Sound
         end
         function obj =preface(obj)
               %second=[1,-0.9409];
-              second=[0,1,-0.9409]; % I like it better
+              second=[1,-0.97]; % I like it better
               obj.sample=conv(obj.sample,second); 
+        end
+        function obj= toframes3(obj)
+            f=16000; %16khz
+            T=0.025;
+            sample=obj.sample;
+            T_over=0.010;
+            rate= floor(T*f);
+            rate2=floor(T_over*f);
+            frames=buffer(sample,rate,rate2);
+            w=hamming(rate);
+            for i=1:size(frames,1)
+                frames(i)=frames(i).*w;
+            end
+            obj.frames=frames;
         end
         function obj =toframes1(obj)
             f=16000; %16khz
