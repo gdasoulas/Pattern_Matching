@@ -69,9 +69,10 @@ classdef Frames
                 filtered(i,:)=obj.Framed(1,:) .* H(i,:);
             end
             obj.Filtered=filtered;
-            %energy=zeroes(24,1);
-            energy=sum(abs(filtered).^2)/size(filtered,2);
-            obj.Energy=energy; %maybe lathos? alios me for
+            
+            %Energy = 1/N * Sum(X[k]^2) in DFT
+            energy=sum(abs(filtered).^2,2)/size(filtered,2);
+            obj.Energy=energy; 
             obj.Log_energy=log10(energy);
             obj.DCT_energy=dct(obj.Log_energy);
         end
