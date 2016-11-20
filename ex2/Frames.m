@@ -16,10 +16,10 @@ classdef Frames
             obj.Framed=fourier;
             obj=obj.mel;
             obj=obj.Matlab_dct;
-            obj.DCT_energy(15:end)=0;
+            obj.DCT_energy(14:end)=0;
             obj.DCT_energy_init=obj.DCT_energy(1:13);
             obj=obj.IMatlab_dct;
-            obj.Reconstruct=idct(obj.DCT_energy); %reverse
+            obj.Reconstruct=10.^idct(obj.DCT_energy); %reverse
         end
         function obj=Matlab_dct(obj)
             obj.DCT_energy(2:end)=obj.DCT_energy(2:end).*sqrt(2/size(obj.DCT_energy,1));
@@ -45,7 +45,9 @@ classdef Frames
             %freq(i)<f<freq(i+1)
             % (abs(fft_fnames).^2)./lenght(fft_fnames) Energy per result 
             %let's try something from this point and down is a test...
-            freq_array=floor(freq_array.* (size(fft_frames,2))/(16000));
+%             freq_array=floor(freq_array.* (size(fft_frames,2))/(16000));
+            
+            freq_array=floor(freq_array.* (size(fft_frames,2)+1)/(16000));
             
             H=zeros(24,size(fft_frames,2));
             for j=1:freq_array(1)

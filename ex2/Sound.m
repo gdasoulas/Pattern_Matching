@@ -53,7 +53,7 @@ classdef Sound
             frames=buffer(sample,rate,rate2);
             w=hamming(rate);
             frames=frames';
-            size(frames)
+%             size(frames)
             size(w');
            % for i=1:size(frames,1)
            %     frames(i,:)=frames(i,:).*(w');
