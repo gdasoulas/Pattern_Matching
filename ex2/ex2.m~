@@ -1,0 +1,95 @@
+clear
+clc
+
+names=dir('./train/*.wav');
+for i=1:133
+    voice(i)=Sound(names(i).name);
+end
+
+clear i names
+%%
+
+data = class_divide(voice);
+
+%%
+
+for j=1:14
+%     scatter(cmean_n1(1:14),cmean_n2(1:14),symbols(1));
+    data8(j)=voice(j).mffc_fframes;
+end
+
+% % hold on;
+% for j=15:29
+% %     scatter(cmean_n1(15:29),cmean_n2(15:29),symbols(2));
+%      data5(j-14,:)=voice(j).mffc_fframes;
+% end
+% 
+% % hold on;
+% for j=30:44
+% %     scatter(cmean_n1(30:44),cmean_n2(30:44),symbols(3));
+%     data6(j-29,:)=voice(j).mffc_fframes;
+% 
+% end
+% % hold on;
+% for j=45:59
+% %     scatter(cmean_n1(45:59),cmean_n2(45:59),symbols(4));
+%     data9(j-44,:)=voice(j).mffc_fframes;
+% 
+% end
+% % hold on;
+% for j=60:74
+% %     scatter(cmean_n1(60:74),cmean_n2(60:74),symbols(5));
+%     data1(j-59,:)=voice(j).mffc_fframes;
+% 
+% end     
+% 
+% % hold on;
+% for j=75:89
+% %     scatter(cmean_n1(75:89),cmean_n2(75:89),symbols(6));
+%     data7(j-74,:)=voice(j).mffc_fframes;
+% 
+% end
+% % hold on;
+% for j=90:103
+% %     scatter(cmean_n1(90:103),cmean_n2(90:103),symbols(7));
+%     data4(j-89,:)=voice(j).mffc_fframes;%i to 6
+% 
+% end
+% % hold on;
+% for j=104:118
+% %     scatter(cmean_n1(104:118),cmean_n2(104:118),symbols(8));
+%          data3(j-103,:)=voice(j).mffc_fframes;
+% 
+% end
+% % hold on;
+% for j=119:133
+% %     scatter(cmean_n1(119:133),cmean_n2(119:133),symbols(9));
+%          data2(j-118,:)=voice(j).mffc_fframes;
+% 
+% end
+
+%%
+data1 = num2cell(data1,2);
+data2 = num2cell(data2,2);
+data3 = num2cell(data3,2);
+data4 = num2cell(data4,2);
+data5 = num2cell(data5,2);
+data6 = num2cell(data6,2);
+data7 = num2cell(data7,2);
+data8 = num2cell(data8,2);
+data9 = num2cell(data9,2);
+
+States=6;
+Mixtures=2;
+Itters=10;
+
+model1=hmm_digit(Itters,States,Mixtures,data1);
+model2=hmm_digit(Itters,States,Mixtures,data2);
+model3=hmm_digit(Itters,States,Mixtures,data3);
+model4=hmm_digit(Itters,States,Mixtures,data4);
+model5=hmm_digit(Itters,States,Mixtures,data5);
+model6=hmm_digit(Itters,States,Mixtures,data6);
+model7=hmm_digit(Itters,States,Mixtures,data7);
+model8=hmm_digit(Itters,States,Mixtures,data8);
+model9=hmm_digit(Itters,States,Mixtures,data9);
+

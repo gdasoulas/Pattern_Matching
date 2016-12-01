@@ -9,7 +9,6 @@ classdef Sound
     methods
         function obj=Sound(name)
             [obj.sample,~]=audioread(strcat('./train/', name));
-            % let's automize it;
             obj=obj.preface;
             obj=obj.toframes1;
             size(obj.frames);
@@ -18,7 +17,7 @@ classdef Sound
             obj.frames=obj.frames';
             obj=obj.fft_of_frames;
             for i=1:size(obj.frames,1)
-                obj.mffc_frames(i,1:13)=obj.fft_frames(i).DCT_energy(1:13);
+                obj.mffc_fframes(i,1:13)=obj.fft_frames(i).DCT_energy(1:13);
             end
                 
 

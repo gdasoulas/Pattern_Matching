@@ -9,6 +9,8 @@ classdef hmm_digit
         Mffcs
         prior
         initial_A
+        initial_mu
+        initial_sigma
         LL
         prior2
         transmat
@@ -23,27 +25,15 @@ classdef hmm_digit
             obj.Num_States=states;
             obj.Mt=MixNums;
             obj.Mffcs=Mffcs;
-            obj.prior = eye(states,states);
-            A=rand(states,states);
-            for i=1:states
-                for j=1:i-1
-                    A(i,j)=0;
-                end
-            end
-            for i=1:states
-                for j=i+1:states
-                    A(i,j)=0;
-                end
-            end
-            obj.initial_A=mk_stochastic(A);
+            [obj.initial_A,obj.initial_mu,obj.initial_sigma,obj.prior] = hmm_init(states,MixNums,Mffcs{1});
         end
-        function obj= train(obj)
+        
+        function obj= hmm_train(obj)
             %I ekfonisi leei oti prepei na einai 12*Nm i paparies autes ,
             %apo oti epiasa
-            [mu, sigma,w] = mixgauss_init(12*obj.Mt,obj.Mffcs,'diag','rnd');
             mixmat = mk_stochastic(rand(12,obj.Mt));
             [obj.LL, obj.prior2, obj.transmat, obj.mu2, obj.Sigma, obj.mixmat2] = ...
-                mhmm_em(obj.Mffcs, obj.prior, obj.initial_A, mu, sigma, mixmat, 'max_iter',obj.Itter);
+                mhmm_em(obj.Mffcs, obj.prior, obj.initial_A, obj.initial_mu, obj.initial_sigma, mixmat, 'max_iter',obj.Itter);
         end
     end
     
