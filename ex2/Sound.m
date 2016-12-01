@@ -8,7 +8,7 @@ classdef Sound
     
     methods
         function obj=Sound(name)
-            [obj.sample,a_ ]=audioread(strcat('train/', name));
+            [obj.sample,~]=audioread(strcat('./train/', name));
             % let's automize it;
             obj=obj.preface;
             obj=obj.toframes1;
