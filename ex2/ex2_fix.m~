@@ -17,7 +17,7 @@ States=6;
 Mixtures=2;
 Itters=10;
 
-classify_obj= Classifier(Itters,States,Mixtures,data);
+    model(i) = hmm_digit(Itters,States,Mixtures,data{i});
 
 % for i=1:9
 %     model(i) = hmm_train(model(i));

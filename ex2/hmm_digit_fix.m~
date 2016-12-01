@@ -35,10 +35,7 @@ classdef hmm_digit_fix
             [obj.LL, obj.prior2, obj.transmat, obj.mu2, obj.Sigma, obj.mixmat2] = ...
                 mhmm_em(obj.Mffcs, obj.prior, obj.initial_A, obj.initial_mu, obj.initial_sigma, mixmat, 'max_iter',obj.Itter);
         end
-        function log_prob = logem(obj,data)
-            [log_prob,errors] = ...
-                mhmm_logprob(data, obj.prior2, obj.transmat, obj.mu2, obj.Sigma, obj.mixmat2);
-        end
+        function log_prob = 
     end
     
 end
