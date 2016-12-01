@@ -18,8 +18,9 @@ classdef Sound
             obj.frames=obj.frames';
             obj=obj.fft_of_frames;
             for i=1:size(obj.frames,1)
-                obj.mffc_frames(i,1:13)=obj.fft_frames(i).DCT_energy(1:13);
+                obj.mffc_fframes(i,1:13)=obj.fft_frames(i).DCT_energy(1:13);
             end
+            obj.mffc_fframes=obj.mffc_fframes';
                 
 
         end
