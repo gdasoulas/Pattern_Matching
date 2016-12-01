@@ -8,9 +8,9 @@ classdef Classifier
     
     methods
         function obj = Classifier(Itters,states,mixtures,data)
-            for i=1:9
-                 obj.models(i) = hmm_digit_fix(Itters,states,mixtures,data{i});
-            end
+                for i=1:9
+                     obj.models(i) = hmm_digit_fix(Itters,states,mixtures,data{i});
+                end
         end
         function res = Classify(obj,data)
             max_v=0;
