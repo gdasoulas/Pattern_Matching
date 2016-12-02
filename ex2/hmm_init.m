@@ -14,9 +14,24 @@ function [transmat,mu0,Sigma0,prior] = hmm_init(Q,M,data)
     
     
     % Mixture of Gaussians
+    % we append all samples of the same category 
     
-    [mu0, Sigma0] = mixgauss_init(Q*M, data, cov_type);
-
+    data_tmp=[];
+    for i=1:size(data,2)
+        data_tmp = [data_tmp data{i}];
+    end
+    
+    mu0 = [];
+    Sigma0 = [];
+    for i=1:Q
+        [mu_tmp, Sigma_tmp] = mixgauss_init(M, data_tmp, cov_type);
+        mu0(:,i,:) = mu_tmp;
+        Sigma0(:,:,i,:) = Sigma_tmp;
+    end
+    
+   
+    
+    
     % Prior states
     
     prior = eye(Q,1);

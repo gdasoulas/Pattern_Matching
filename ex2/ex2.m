@@ -18,11 +18,13 @@ Mixtures=2;
 Itters=10;
 
 for i=1:9
-    model(i) = hmm_digit(Itters,States,Mixtures,data{i});
+    model(i) = hmm_digit_fix(Itters,States,Mixtures,data{i});
 end
 
-% for i=1:9
-%     model(i) = hmm_train(model(i));
-% end
+%%
+
+for i=1:9
+    model(i) = hmm_train_fix(model(i));
+end
 
 clear i Itters Mixtures States
