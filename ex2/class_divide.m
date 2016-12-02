@@ -1,4 +1,4 @@
-function [Classes_voi]=class_divide(samples)
+function [Classes_voice]=class_divide(samples)
 %Diaxwrismos twn 9 klasewn
 
     Classes_voice_temp{8}=samples(1:14);
