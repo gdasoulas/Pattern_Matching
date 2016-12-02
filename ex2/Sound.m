@@ -10,11 +10,11 @@ classdef Sound
         function obj=Sound(name)
             [obj.sample,~]=audioread(strcat('./train/', name));
             obj=obj.preface;
-            obj=obj.toframes1;
-            size(obj.frames);
-            obj=obj.toframes3;
-            size(obj.frames);
-            obj.frames=obj.frames';
+%             obj=obj.toframes3;
+%              [obj.frames ~]=vec2frames(obj.sample,{},10,'cols','hamming',false);
+%             obj.frames=obj.frames';
+            [obj.frames,~,~]=enframe(obj.sample,hamming(400,'periodic'),240);
+%             obj.frames=obj.frames';
             obj=obj.fft_of_frames;
             for i=1:size(obj.frames,1)
                 obj.mffc_fframes(i,1:13)=obj.fft_frames(i).DCT_energy(1:13);

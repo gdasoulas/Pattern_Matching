@@ -1,6 +1,8 @@
 clear
 clc
 
+rmpath(genpath('../HMMall/'));
+
 names=dir('./train/*.wav');
 for i=1:133
     voice(i)=Sound(names(i).name);
@@ -12,7 +14,6 @@ clear i names
 data = class_divide(voice);
 [TrainData,TestData]=dividett(data);
 
-clear data
 %%
 
 addpath(genpath('../HMMall/'));
@@ -31,8 +32,8 @@ for i=1:9
     end
 end
 
-
-fprintf('Accuracy rate: %f%%\n',counter/133.0*100); 
+num = 45;  % plithos test data
+fprintf('Accuracy rate: %f%%\n',(counter*1.0)/num*100); 
 
 clear i Itters Mixtures States
 
