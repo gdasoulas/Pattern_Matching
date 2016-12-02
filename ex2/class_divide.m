@@ -1,4 +1,4 @@
-function [Classes_voice]=class_divide(samples)
+function [Classes_voi]=class_divide(samples)
 %Diaxwrismos twn 9 klasewn
 
     Classes_voice_temp{8}=samples(1:14);
@@ -18,5 +18,16 @@ function [Classes_voice]=class_divide(samples)
             Classes_voice{i}(j) = tmp;
         end
     end
+    
+%     for i=1:size(Classes_voice,2)
+%         for j=1:10
+%             TrainData{1,i}{j}=Classes_voice{1,i}{j};
+%         end
+%         for j=11:size(Classes_voice{i},2)
+%             TestData{1,i}{j-10}=Classes_voice{1,i}{j};
+%         end
+%     end
+
+    
 end
 
