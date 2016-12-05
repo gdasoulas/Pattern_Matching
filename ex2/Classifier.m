@@ -19,7 +19,7 @@ classdef Classifier
         function res = Classify(obj,data)
             max_v=-200000;
             res=0;
-            for i=1:size(data,2)
+            for i=1:9
                 tmp=obj.models(i).logem(data);
                 if tmp>max_v
                     max_v=tmp;

@@ -1,6 +1,7 @@
 clear
 clc
 
+%%
 rmpath(genpath('../HMMall/'));
 
 names=dir('./train/*.wav');
@@ -19,6 +20,7 @@ clear data
 
 addpath(genpath('../HMMall/'));
 
+
 States=6;
 Mixtures=2;
 Itters=10;
@@ -31,8 +33,7 @@ for i=1:10
 classify_obj(i)= Classifier(Itters,States,Mixtures,TrainData);
 end
 
-
-%% Classification 
+%% Classification with voting 
 
 
 counter=0;
@@ -52,7 +53,28 @@ fprintf('Accuracy rate: %f%%\n',(counter*1.0)/num*100);
 clear i Itters Mixtures States counter prediction j k num
 
 
+%% Finding best classifier of 10
+old_counter=0;
+for k=1:10 
+counter=0;
+    for i=1:9
+        for j=1:size(TestData{i},2)
+            predicti=Classify(classify_obj(k),TestData{1,i}{1,j}); 
+            counter = counter + (predicti==i);
+        end
+    end
+    if (counter>old_counter)
+        old_counter=counter;
+        max_class=k;
+    end
+end
 
+counter=old_counter;
+num=45;
+fprintf('Best accuracy rate from 10 classifiers: %f%%  for classifier %d\n',(counter*1.0)/num*100,max_class); 
+
+
+clear i j old_counter num predicti k counter
 %% bima 13
 %k1=8
 
@@ -69,25 +91,13 @@ for Itters=5:15
     end
 end
 
-%%
 for i=1:5
     plot(loglik(:,i));
     hold on;
 
 end
-
-%%
-
-States=6;
-Mixtures=2;
-var_digit8=hmm_digit(15,States,Mixtures,train{8});
- data_for_plot = var_digit_plot.LL;
- plot(data_for_plot,[1,..,15]) ; % i oti thelei
  
- 
- 
- 
- 
+clear i Train_k1 j loglik k1
  %% bima 14
  % Confusion matrix 
  % res{j}(i) = to apotelesma gia thn i-ekfwnisi toy psifiou j
@@ -104,12 +114,22 @@ var_digit8=hmm_digit(15,States,Mixtures,train{8});
  clear i j res
      
  
- %% Viterbi
+ %% Bhma 15 -Viterbi
 
- for i=1:length(data{8})
-     obslik = multinomial_prob(train{8}(i,:),var_digit8.mixmax2);
-     viter_path=viterbi_path(var_digit8.prior2,var_digit8.transmat,obslik);
-     hold on;
-     add_to_plot(viter_path); %????
- end
  
+k1=8;
+wanted_classifier = classify_obj(1,max_class) ; % keeping best classifier
+
+for i=1:9
+    figure;
+    for j=1:size(TrainData{1,i},2)
+         model=wanted_classifier.models(1,i);
+         obslik = mixgauss_prob(TrainData{1,i}{1,j},model.mu2,model.Sigma,model.mixmat2);
+         viter_path=viterbi_path(model.prior,model.transmat,obslik);
+         hold on;
+         plot(viter_path);
+         title(strcat('Viterbi path for digit=',num2str(i)));
+    end
+end
+ 
+clear i k1 model obslik wanted_classifier
