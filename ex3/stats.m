@@ -25,6 +25,6 @@ function [val,act,cooccurence,labels]=stats()
         xlabel('Valence');
         ylabel('Activation');
         title(strcat('2D Histogram of Labels for Annotator No ',num2str(i)));
-
+        saveas(gcf,strcat('hist_2D_',num2str(i),'.png'));
     end
 end
