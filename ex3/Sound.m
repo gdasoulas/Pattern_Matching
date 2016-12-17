@@ -1,14 +1,51 @@
 classdef Sound  
     properties
-        sample
+
+        object
+        char
+        mffcmean
+        mffcstd
+        mffcmean10
+        mffcstd10
+        
     end
     
     methods
         function obj=Sound(name)
-            [obj.sample,~]=audioread(strcat('./PRcourse_Lab3_data/MusicFileSamples/', name));
-            obj.sample=preprocess(obj);
+            obj.object=miraudio(name,'Sampling',22050,'Frame',0.05,'s',0.025,'s');
+            obj=obj.charact();
+            %[obj.sample,~]=audioread(strcat('./PRcourse_Lab3_data/MusicFileSamples/', name));
+            %obj.sample=preprocess(obj);
+             tmp=miraudio(name,'Sampling',22050,'Frame',0.025,'s',0.01,'s');
+             a=mirgetdata(mirmfcc(tmp,'Bands',26,'Delta',1));
+             b=mirgetdata(mirmfcc(tmp,'Bands',26,'Delta',2));
+             c=mirgetdata(mirmfcc(tmp,'Bands',26));
+             a=a';
+             b=b';
+             c=c';
+             obj.mffcmean= [mean(c) mean(a) mean(b)];
+             obj.mffcstd =[std(c) std(a) std(b)];
+             a = sort(a,'descend');
+             b = sort(b,'descend');       
+             c = sort(c,'descend');
+             per=@(x) x(1:ceil(length(x)*0.1));
+             obj.mffcmean10= [mean(per(c)) mean(per(a)) mean(per(b))];
+             obj.mffcstd10 =[std((per(c))) std((per(a))) std(per(b))];
+
         end
-        
+        function obj= charact(obj)
+            %roughness
+            f=mirfeatures(obj.object,'Stat');
+            rou=mirgetdata( mirroughness(obj.object));
+            m = median(rou);
+            me=  mean (rou>m);
+            me2= mean(rou<m);
+            obj.char= [f.spectral.roughness.Mean,f.spectral.roughness.Std,me,me2, ...
+                f.fluctuation.peak.PeakMagMean,mean(f.fluctuation.tmp.f.Mean),f.tonal.keyclarity.Mean,...
+                f.tonal.mode.Mean,mirgetdata(mirmean( mirnovelty(obj.object))),f.tonal.hcdf.Mean];
+            
+            
+        end
         function obj=preprocess(obj)
             Fs=44100;  % arxiki Fs=44.1khz
             [P,Q]=rat(22050/Fs);
