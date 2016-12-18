@@ -11,11 +11,13 @@ classdef Sound
     end
     
     methods
+
         function obj=Sound(name)
+            name=strcat('MusicFileSamples/',name);
             obj.object=miraudio(name,'Sampling',22050,'Frame',0.05,'s',0.025,'s');
             obj=obj.charact();
             %[obj.sample,~]=audioread(strcat('./PRcourse_Lab3_data/MusicFileSamples/', name));
-            %obj.sample=preprocess(obj);
+             obj.sample=preprocess(obj);
              tmp=miraudio(name,'Sampling',22050,'Frame',0.025,'s',0.01,'s');
              a=mirgetdata(mirmfcc(tmp,'Bands',26,'Delta',1));
              b=mirgetdata(mirmfcc(tmp,'Bands',26,'Delta',2));
@@ -25,12 +27,13 @@ classdef Sound
              c=c';
              obj.mffcmean= [mean(c) mean(a) mean(b)];
              obj.mffcstd =[std(c) std(a) std(b)];
-             a = sort(a,'descend');
-             b = sort(b,'descend');       
-             c = sort(c,'descend');
-             per=@(x) x(1:ceil(length(x)*0.1));
+             a = sort(a,1,'descend');
+             b = sort(b,1,'descend');       
+             c = sort(c,1,'descend');
+             per=@(x) x(1:ceil(size(x,1)*0.1),:);
              obj.mffcmean10= [mean(per(c)) mean(per(a)) mean(per(b))];
              obj.mffcstd10 =[std((per(c))) std((per(a))) std(per(b))];
+             obj.object=0;
 
         end
         function obj= charact(obj)

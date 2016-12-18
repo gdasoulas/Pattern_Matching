@@ -1,10 +1,9 @@
 clear all
 clc
-
 %% bhma 1 
 
-names = dir('./PRcourse_Lab3_data/MusicFileSamples/*.wav');
-for i=1:10
+names = dir('MusicFileSamples/*.wav');
+for i=1:412
     music_file(i)=Sound(names(i).name);
 end
 
