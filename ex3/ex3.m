@@ -2,12 +2,14 @@ clear all
 clc
 %% bhma 1 
 
-names = dir('MusicFileSamples/*.wav');
+names = dir('./PRcourse_Lab3_data/MusicFileSamples/*.wav');
+
+%%
 for i=1:412
     music_file(i)=Sound(names(i).name);
 end
 
-clear i names
+clear i 
 
 %% bhma 2 
 
@@ -30,22 +32,84 @@ clear i
 
 for i=1:2
     for j=i+1:3
-%         figure;
-        hist(squeeze(diff_val(i,j,:)));
+        figure;
+        histogram(squeeze(diff_val(i,j,:)));
         xlabel('Difference I_{ij}-I{ik}');
         ylabel('Occurences');
         title(strcat('Histogram for Valence between No',num2str(i),' and No',num2str(j),' Annotators'));
+        axis([-.5 4 0 inf]);
         saveas(gcf,strcat('diff_valence_',num2str(i),'_',num2str(j),'.png'));
         
-%         figure;
-        hist(squeeze(diff_val(i,j,:)));
+        figure;
+        histogram(squeeze(diff_act(i,j,:)));
         xlabel('Difference I_{ij}-I{ik}');
         ylabel('Occurences');
         title(strcat('Histogram for Activation between No',num2str(i),' and No',num2str(j),' Annotators'));
+        axis([-.5 4 0 inf]);
         saveas(gcf,strcat('diff_activation_',num2str(i),'_',num2str(j),'.png'));
-
     end
 end
 
 
+%% bhma 4 - Knippendorf's alpha
+
+alpha_val  = kriAlpha(val,'ordinal');
+alpha_act  = kriAlpha(act,'ordinal');
+
+
+%% bhma 5 - Telikes epishmeiwseis
+
+final_val = mean(val,1);
+final_act = mean(act,1);
+
+hist_2D(final_val,final_act);
+
+
+%% bhma 10 - katwfliwsi 
+
+bad_indices1=find(final_val(:)==3);
+bad_indices2=find(final_act(:)==3);
+bad_indices=union(bad_indices1,bad_indices2);
+final_val(:,bad_indices)=[];
+final_act(:,bad_indices)=[];
+
+for i=1:size(final_act,2)
+    if final_act(i)<3
+        final_act(i)=-1;
+        final_val(i)=-1;
+    else
+        final_act(i)=1;
+        final_val(i)=1;
+    end
+end
+
+
+%% bhma 11 - xwrismos set
+
+for i=1:size(names,1)
+    names_n{i}=names(i).name;
+end    
+[names_n,sort_ind]=sort_nat(names_n);
+music_file = music_file(sort_ind);
+
+music_file_rand=music_file;
+music_file_rand(bad_indices)=[];
+
+music_file_rand =music_file_rand(randperm(size(music_file_rand,2)));
+TrainData = music_file_rand(1:250); % 80% traindata
+TestData = music_file_rand(251:end); % 20% testdata
+
+
+%% bhma 12 - nnr 
+
+for i=1:size(TrainData,2)
+    TrainData_1(i,:) = TrainData(i).char;
+end
+for i=1:size(TestData,2)
+    TestData_1(i,:) = TestData(i).char;
+end
+
+fprintf('--------------------------------\n Preprocessing 14th question ...\n Computing Eucleideian Distances \n');
+
+Eu_dist = pdist2(TestData_1(:,1:end),TrainData_1(:,1:end),'euclidean');
 
