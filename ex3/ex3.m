@@ -83,7 +83,6 @@ for i=1:size(final_act,2)
     end
 end
 
-
 %% bhma 11 - xwrismos set
 
 for i=1:size(names,1)
@@ -100,6 +99,7 @@ TrainData = music_file_rand(1:250); % 80% traindata
 TestData = music_file_rand(251:end); % 20% testdata
 
 
+clear i 
 %% bhma 12 - nnr 
 
 for i=1:size(TrainData,2)
@@ -113,3 +113,4 @@ fprintf('--------------------------------\n Preprocessing 14th question ...\n Co
 
 Eu_dist = pdist2(TestData_1(:,1:end),TrainData_1(:,1:end),'euclidean');
 
+[p_val,p_act]=k_nearest_neighbor(TrainData_1(:,1:end),TestData_1(:,1:end),Eu_dist,1,final_val,final_act);
