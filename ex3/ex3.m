@@ -70,15 +70,19 @@ hist_2D(final_val,final_act);
 bad_indices1=find(final_val(:)==3);
 bad_indices2=find(final_act(:)==3);
 bad_indices=union(bad_indices1,bad_indices2);
+
 final_val(:,bad_indices)=[];
 final_act(:,bad_indices)=[];
 
 for i=1:size(final_act,2)
     if final_act(i)<3
         final_act(i)=-1;
-        final_val(i)=-1;
     else
         final_act(i)=1;
+    end
+    if final_val(i)<3
+        final_val(i)=-1;
+    else
         final_val(i)=1;
     end
 end
@@ -94,23 +98,40 @@ music_file = music_file(sort_ind);
 music_file_rand=music_file;
 music_file_rand(bad_indices)=[];
 
-music_file_rand =music_file_rand(randperm(size(music_file_rand,2)));
-TrainData = music_file_rand(1:250); % 80% traindata
-TestData = music_file_rand(251:end); % 20% testdata
+clear i
 
 
-clear i 
-%% bhma 12 - nnr 
+%% Bhma 11: 3-Fold Cross Validation 
 
-for i=1:size(TrainData,2)
-    TrainData_1(i,:) = TrainData(i).char;
+for c=1:3
+
+    music_file_rand =music_file_rand(randperm(size(music_file_rand,2)));
+    
+    split_orio  = int16(0.9*size(music_file_rand,2));
+    
+    TrainData = music_file_rand(1:split_orio); % 80% traindata
+    TestData = music_file_rand((split_orio+1):end); % 20% testdata
+
+    % Xaraktiristika apo bhma 6 
+    for i=1:size(TrainData,2)
+        TrainData_1(i,:) = TrainData(i).char;
+    end
+    for i=1:size(TestData,2)
+        TestData_1(i,:) = TestData(i).char;
+    end
+
+    fprintf('--------------------------------\n Preprocessing 14th question ...\n Computing Eucleideian Distances \n');
+
+    Eu_dist = pdist2(TestData_1(:,1:end),TrainData_1(:,1:end),'euclidean');
+
+    [p_val,p_act]=k_nearest_neighbor(TrainData_1(:,1:end),TestData_1(:,1:end),Eu_dist,1,final_val,final_act);
+
+    success_val(c) = size(p_val,1);
+    success_act(c) = size(p_act,1);
+    
 end
-for i=1:size(TestData,2)
-    TestData_1(i,:) = TestData(i).char;
-end
 
-fprintf('--------------------------------\n Preprocessing 14th question ...\n Computing Eucleideian Distances \n');
+fin_p_val = mean(success_val)/size(TestData_1,1);
+fin_p_act=mean(success_act)/size(TestData_1,1);
 
-Eu_dist = pdist2(TestData_1(:,1:end),TrainData_1(:,1:end),'euclidean');
-
-[p_val,p_act]=k_nearest_neighbor(TrainData_1(:,1:end),TestData_1(:,1:end),Eu_dist,1,final_val,final_act);
+clear c i j 

@@ -1,4 +1,4 @@
-function [val,act,cooccurence,labels]=stats()
+function [val,act,cooccurence,labels]=stats(printing_flag)
     dir_emotion = './PRcourse_Lab3_data/EmotionLabellingData/';
     labels(1) = load(strcat(dir_emotion,'Labeler1.mat'));
     labels(2) = load(strcat(dir_emotion,'Labeler2.mat'));
@@ -10,7 +10,6 @@ function [val,act,cooccurence,labels]=stats()
             act(i,j)=labels(i).labelList(j).activation;
         end
     end
-
     for i=1:3 
         X=[val(i,:)' act(i,:)']; 
         n = zeros(5,5);
@@ -18,13 +17,15 @@ function [val,act,cooccurence,labels]=stats()
             n(X(j,1),X(j,2))=n(X(j,1),X(j,2))+1;
         end
         cooccurence{i}=n;
-        xb = linspace(min(X(:,1)),max(X(:,1)),size(n,1));
-        yb = linspace(min(X(:,2)),max(X(:,2)),size(n,1));
-        figure;
-        h = pcolor(xb,yb,n);
-        xlabel('Valence');
-        ylabel('Activation');
-        title(strcat('2D Histogram of Labels for Annotator No ',num2str(i)));
-        saveas(gcf,strcat('hist_2D_',num2str(i),'.png'));
+        if (printing_flag==1)
+            xb = linspace(min(X(:,1)),max(X(:,1)),size(n,1));
+            yb = linspace(min(X(:,2)),max(X(:,2)),size(n,1));
+            figure;
+            h = pcolor(xb,yb,n);
+            xlabel('Valence');
+            ylabel('Activation');
+            title(strcat('2D Histogram of Labels for Annotator No ',num2str(i)));
+            saveas(gcf,strcat('hist_2D_',num2str(i),'.png'));
+        end    
     end
 end
