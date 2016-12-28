@@ -32,12 +32,11 @@ test_val = final_val((size(TrainData,1)+1):end);
         final_idx_val=final_idx_val';
         final_idx_act=final_idx_act';
    end
-        assignin('base','indee',idx);
-
-       assignin('base','neigh_val',neighbors_val);
-      assignin('base','neigh_act',neighbors_act);
-     assignin('base','train_val',train_val);
-      assignin('base','test_act',test_act);
+%         assignin('base','indee',idx);
+%         assignin('base','neigh_val',neighbors_val);
+%         assignin('base','neigh_act',neighbors_act);
+%         assignin('base','train_val',train_val);
+%         assignin('base','test_act',test_act);
       
     p_nn_val = find(final_idx_val(:) == test_val(:));
     p_nn_act = find(final_idx_act(:) == test_act(:));
