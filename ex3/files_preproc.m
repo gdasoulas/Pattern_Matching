@@ -8,4 +8,10 @@ function [music_file]=files_preproc()
 
     load('file_chars_correct.mat');
     music_file = music_file(sort_ind); 
+    
+    load('preqel.mat');
+    for i=1:size(music_file,2)
+        music_file(i).char_arg = feature(i,:);
+        music_file(i).mffc_arg = mfcc(i,:);        
+    end
 end

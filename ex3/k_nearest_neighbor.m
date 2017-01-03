@@ -1,10 +1,9 @@
-function [p_nn_val,p_nn_act] = k_nearest_neighbor(TrainData,TestData,Eu,k,final_val,final_act)
+function [final_idx_val,final_idx_act] = k_nearest_neighbor(TrainData,TestData,Eu,k,kat_val,kat_act)
 
-clear c i j 
-train_act = final_act(1:size(TrainData,1));
-train_val = final_val(1:size(TrainData,1));
-test_act = final_act((size(TrainData,1)+1):end);
-test_val = final_val((size(TrainData,1)+1):end);
+train_act = kat_act(1:size(TrainData,1));
+train_val = kat_val(1:size(TrainData,1));
+test_act = kat_act((size(TrainData,1)+1):end);
+test_val = kat_val((size(TrainData,1)+1):end);
 
    [ED_sorted,I_ED_sorted] = sort(Eu,2);
    idx = I_ED_sorted(:,1:k);
@@ -31,17 +30,5 @@ test_val = final_val((size(TrainData,1)+1):end);
        end
         final_idx_val=final_idx_val';
         final_idx_act=final_idx_act';
-   end
-%         assignin('base','indee',idx);
-%         assignin('base','neigh_val',neighbors_val);
-%         assignin('base','neigh_act',neighbors_act);
-%         assignin('base','train_val',train_val);
-%         assignin('base','test_act',test_act);
-      
-    p_nn_val = find(final_idx_val(:) == test_val(:));
-    p_nn_act = find(final_idx_act(:) == test_act(:));
-
-    
-    
-    
+   end  
 end
