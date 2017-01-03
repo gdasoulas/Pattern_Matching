@@ -7,17 +7,19 @@ classdef Sound
         mffcstd
         mffcmean10
         mffcstd10
+        mffc_arg
+        char_arg
         
     end
     
     methods
 
         function obj=Sound(name)
-            name=strcat('MusicFileSamples/',name);
+            name=name;
             obj.object=miraudio(name,'Sampling',22050,'Frame',0.05,'s',0.025,'s');
             obj=obj.charact();
             %[obj.sample,~]=audioread(strcat('./PRcourse_Lab3_data/MusicFileSamples/', name));
-             obj.sample=preprocess(obj);
+             %obj.sample=preprocess(obj);
              tmp=miraudio(name,'Sampling',22050,'Frame',0.025,'s',0.01,'s');
              a=mirgetdata(mirmfcc(tmp,'Bands',26,'Delta',1));
              b=mirgetdata(mirmfcc(tmp,'Bands',26,'Delta',2));

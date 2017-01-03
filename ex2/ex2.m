@@ -21,6 +21,7 @@ clear data
 addpath(genpath('../HMMall/'));
 
 
+
 States=6;
 Mixtures=2;
 Itters=10;
@@ -76,28 +77,19 @@ fprintf('Best accuracy rate from 10 classifiers: %f%%  for classifier %d\n',(cou
 
 clear i j old_counter num predicti k counter
 %% bima 13
-%k1=8
+
+    k1=8
 
 States=6;
 Mixtures=2;
 
-k1=8;
-Train_k1{1} = TrainData{k1};
 
-for Itters=5:15
-    classi = Classifier(Itters,States,Mixtures,Train_k1);
-    for j=1:5
-        loglik(Itters,j) = classi.models(1).LL(j);
-    end
-end
-
-for i=1:5
-    plot(loglik(:,i));
-    hold on;
-
-end
+plot(classify_obj(1,max_class).models(1,k1).LL);
+title('Plot for logarithmic likelihood with max iterations=10 and digit k1=8');
+ylabel('Log Likelihood');
+xlabel('Iteration');
  
-clear i Train_k1 j loglik k1
+clear i Train_k1 j k1
  %% bima 14
  % Confusion matrix 
  % res{j}(i) = to apotelesma gia thn i-ekfwnisi toy psifiou j
@@ -129,7 +121,10 @@ for i=1:9
          hold on;
          plot(viter_path);
          title(strcat('Viterbi path for digit=',num2str(i)));
+         xlabel('Time');
+         ylabel('State');
     end
+%     saveas(gcf,strcat('Viter',num2str(i)),'png');
 end
  
-clear i k1 model obslik wanted_classifier
+clear i k1 model obslik wanted_classifier j viter_path 
