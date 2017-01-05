@@ -1,6 +1,7 @@
 classdef Sound  
     properties
-
+        
+        order
         object
         char
         mffcmean
