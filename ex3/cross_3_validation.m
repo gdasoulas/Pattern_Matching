@@ -20,6 +20,14 @@ function  [accuracy,fscore]= cross_3_validation(music_file_rand,kat_label,char_s
             for i=1:size(TestData,2)
                 TestData_1(i,:) = TestData(i).char_arg;
             end
+            
+            for i=1:size(music_file_rand,2)
+                inp_lab(i,:)=[music_file_rand(i).char_arg kat_label(i)];
+                arffwrite(strcat('activation',num2str(char_step)),inp_lab);
+            end     
+            
+            
+        
         elseif (char_step == 2)
             % Xaraktiristika apo bhma 7 
             for i=1:size(TrainData,2)
@@ -28,6 +36,13 @@ function  [accuracy,fscore]= cross_3_validation(music_file_rand,kat_label,char_s
             for i=1:size(TestData,2)
                 TestData_1(i,:) = TestData(i).mffc_arg;
             end
+            
+            for i=1:size(music_file_rand,2)
+                inp_lab(i,:)=[music_file_rand(i).mffc_arg kat_label(i)];
+                arffwrite(strcat('activation',num2str(char_step)),inp_lab);
+            end     
+            
+            
         else
             % Syndyasmos xarakthristikwn 6 k 7 
             for i=1:size(TrainData,2)
@@ -41,9 +56,14 @@ function  [accuracy,fscore]= cross_3_validation(music_file_rand,kat_label,char_s
                 TestData_1(i,:) = [TestData_3(i,:) TestData_2(i,:)];
            
             end
+            
+            for i=1:size(music_file_rand,2)
+                inp_lab(i,:)=[music_file_rand(i).char_arg music_file_rand(i).mffc_arg kat_label(i)];
+                arffwrite(strcat('activation',num2str(char_step)),inp_lab);
+            end     
+            
         end
        
-             
         Eu_dist = pdist2(TestData_1,TrainData_1,'euclidean');
         
         

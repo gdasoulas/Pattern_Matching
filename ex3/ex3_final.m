@@ -30,7 +30,7 @@ clear bad_indices*
 
 cases = [1,2,3]; % feature cases
 for i=1:3
-    [acc_fold_val(:,:,i),fsc_fold_val(:,:,i)]= cross_3_validation(music_file_rand_val,kat_val,i);
+%     [acc_fold_val(:,:,i),fsc_fold_val(:,:,i)]= cross_3_validation(music_file_rand_val,kat_val,i);
     [acc_fold_act(:,:,i),fsc_fold_act(:,:,i)]= cross_3_validation(music_file_rand_act,kat_act,i);
 %     fprintf ('Case %d\n',i);
 %     fprintf ('Accuracy rate for valence : %f%%\n',mean(succ_fold_val(:,i))*100);
