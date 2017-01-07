@@ -1,4 +1,4 @@
-function  [accuracy]= cross3bayers(music_file_rand,kat_label,char_step)
+function  [accuracy]= cross3bayers(music_file_rand,kat_label)
 kat_label(find(kat_label(:)==-1))=2;
  for c=1:3
         rand_indices=randperm(size(music_file_rand,2));
@@ -13,7 +13,6 @@ kat_label(find(kat_label(:)==-1))=2;
         TestData = music_file_rand((split_orio+1):end);
         kat_label_test = kat_label((split_orio+1):end);
 
-        if (char_step == 1)
             % Xaraktiristika apo bhma 6 
             for i=1:size(TrainData,2)
                 TrainData_1(i,:) = TrainData(i).char_arg;
@@ -60,13 +59,14 @@ kat_label(find(kat_label(:)==-1))=2;
              
         end
                 for i=1:2
-                     temp = TrainData_1(find(kat_label_train(:)==i)) ;	
+                     temp = TrainData_1(find(kat_label_train(:)==i),:) ;	
                       m_all(:,i) = mean(temp);
                       s_all(:,i) = var(temp);
                 end
                 apriori = apriori_comp(kat_label_train,[1 2]);
-                s_all_biased = s_all + (1/(4*pi+3));
+                s_all_biased = s_all ;%+ (1/(4*pi+3));
                 h_x = bayes_classifier(TestData_1,m_all,s_all_biased,apriori,[1 2]);
+
                 for j=1:size(TestData_1,1)
                     [~,idx(j)] = max(h_x(:,j));
                 end
@@ -81,4 +81,3 @@ kat_label(find(kat_label(:)==-1))=2;
     
     end
 
-end

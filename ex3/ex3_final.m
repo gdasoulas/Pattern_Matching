@@ -69,10 +69,11 @@ for i=1:size(music_file_rand_act,2)
        TrainData_1(i,:) = [TrainData_3(i,:) TrainData_2(i,:)];
 end
 [cov data eigen]=myPCA(TrainData_1);
-%eigenvalues 1-7 are aproximate 100% of variance
-data=data(:,1:7);
+%eigenvalues 1-8 are aproximate 100% of variance
+data=data(:,1:8);
 
  [acc_fold_act(:,:)]= cross_3_validation2(data,kat_act);
+ [acc_fold_act2(:,:)]= cross3bayers2(data,kat_act);
 
 
 %% Bhma 15: WEKA

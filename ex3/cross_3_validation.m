@@ -1,4 +1,4 @@
-function  [accuracy,fscore]= cross_3_validation(music_file_rand,kat_label,char_step)
+        function  [accuracy,fscore]= cross_3_validation(music_file_rand,kat_label,char_step)
     for c=1:3
         rand_indices=randperm(size(music_file_rand,2));
         music_file_rand =music_file_rand(rand_indices);
@@ -11,7 +11,7 @@ function  [accuracy,fscore]= cross_3_validation(music_file_rand,kat_label,char_s
 
         TrainData = music_file_rand(1:split_orio); 
         TestData = music_file_rand((split_orio+1):end); 
-        
+            
         if (char_step == 1)
             % Xaraktiristika apo bhma 6 
             for i=1:size(TrainData,2)
