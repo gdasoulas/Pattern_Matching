@@ -63,7 +63,16 @@ clear i cases
 
 %% Bhma 14: PCA
 
+for i=1:size(music_file_rand_act,2)
+       TrainData_3(i,:) = music_file_rand_act(i).char_arg;
+       TrainData_2(i,:) = music_file_rand_act(i).mffc_arg;
+       TrainData_1(i,:) = [TrainData_3(i,:) TrainData_2(i,:)];
+end
+[cov data eigen]=myPCA(TrainData_1);
+%eigenvalues 1-7 are aproximate 100% of variance
+data=data(:,1:7);
 
+ [acc_fold_act(:,:)]= cross_3_validation2(data,kat_act);
 
 
 %% Bhma 15: WEKA
